@@ -13,6 +13,122 @@
 </style>
 </head>
 <body>
+<style>
+  /* Masque le mémo tant que l'écran d'accès est présent */
+  body.itn-verrouille > :not(#itn-acces) {
+    display: none !important;
+  }
+
+  #itn-acces {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #eef3f9;
+    font-family: Arial, sans-serif;
+    color: #12345a;
+    overflow: auto;
+  }
+
+  #itn-acces .itn-carte {
+    width: 100%;
+    max-width: 380px;
+    padding: 32px;
+    box-sizing: border-box;
+    background: white;
+    border-top: 7px solid #f3cb35;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px #12345a20;
+    text-align: center;
+  }
+
+  #itn-acces h1 {
+    margin: 0 0 12px;
+    font-size: 28px;
+  }
+
+  #itn-acces label {
+    display: block;
+    margin: 24px 0 8px;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  #itn-acces input,
+  #itn-acces button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    font: inherit;
+    border-radius: 9px;
+  }
+
+  #itn-acces input {
+    border: 1px solid #aab8c8;
+  }
+
+  #itn-acces button {
+    margin-top: 14px;
+    border: 0;
+    background: #12345a;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #itn-erreur {
+    min-height: 20px;
+    margin-bottom: 0;
+    color: #b42318;
+  }
+</style>
+
+<div id="itn-acces">
+  <form class="itn-carte" id="itn-formulaire">
+    <h1>Bienvenue à l’ITN</h1>
+    <p>Saisis le mot de passe pour accéder au mémo.</p>
+
+    <label for="itn-motdepasse">Mot de passe</label>
+    <input
+      id="itn-motdepasse"
+      type="password"
+      autocomplete="current-password"
+      required
+      autofocus
+    >
+
+    <button type="submit">Accéder au mémo</button>
+    <p id="itn-erreur" role="alert"></p>
+  </form>
+</div>
+
+<script>
+(function () {
+  /* Remplace cette valeur par ton mot de passe */
+  const motDePasse = "ITN2026!";
+
+  const formulaire = document.getElementById("itn-formulaire");
+  const champ = document.getElementById("itn-motdepasse");
+  const erreur = document.getElementById("itn-erreur");
+
+  formulaire.addEventListener("submit", function (evenement) {
+    evenement.preventDefault();
+
+    if (champ.value === motDePasse) {
+      document.body.classList.remove("itn-verrouille");
+      document.getElementById("itn-acces").remove();
+    } else {
+      erreur.textContent = "Mot de passe incorrect. Réessaie.";
+      champ.value = "";
+      champ.focus();
+    }
+  });
+})();
+</script>
 <a class="skip" href="#contenu">Aller au mémo</a>
 <header class="topbar"><div class="shell"><div class="topline"><a href="#essentiel" class="brand" aria-label="ITN, accueil du mémo"><img src="data:image/webp;base64,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" alt="Institut des Talents Nautiques"><div><strong>Mon mémo Teams</strong><span>À portée de clic</span></div></a><div class="toptools"><button id="motion" class="plain" type="button" aria-pressed="false">Pause mascotte</button></div></div><nav aria-label="Rubriques du mémo"><a class="navlink" href="#essentiel" data-page="essentiel"><span class="nav-num">1</span>L’essentiel</a><a class="navlink" href="#fichiers" data-page="fichiers"><span class="nav-num">2</span>Où ranger ?</a><a class="navlink" href="#teams" data-page="teams"><span class="nav-num">3</span>Dans Teams</a><a class="navlink" href="#acces" data-page="acces"><span class="nav-num">4</span>Accès refusé</a><a class="navlink" href="#defi" data-page="defi"><span class="nav-num">5</span>Le mini-défi</a></nav></div></header>
 <main class="shell" id="contenu" tabindex="-1">
